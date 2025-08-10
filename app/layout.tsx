@@ -1,7 +1,9 @@
-import Navbar from "@/components/navigation/navbar";
+import { auth } from "@/auth";
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const inter = localFont({
@@ -21,26 +23,29 @@ export const metadata: Metadata = {
   description: "A better version of Stack Overflow",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <SessionProvider session={session}>
+        <body
+          className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
         >
-          <Navbar />
-          {children}
-        </ThemeProvider>
-      </body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+          <Toaster richColors />
+        </body>
+      </SessionProvider>
     </html>
   );
 }
