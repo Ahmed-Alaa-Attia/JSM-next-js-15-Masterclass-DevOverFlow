@@ -1,5 +1,5 @@
-const page = () => {
-  return <div></div>;
+const Tags = () => {
+  return <div>WOOOW</div>;
 };
 
-export default page;
+export default Tags;
